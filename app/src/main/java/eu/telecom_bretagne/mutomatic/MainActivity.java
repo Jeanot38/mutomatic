@@ -1,4 +1,4 @@
-package eu.telecom_breatgne.mutomatic;
+package eu.telecom_bretagne.mutomatic;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

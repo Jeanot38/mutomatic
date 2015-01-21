@@ -1,4 +1,4 @@
-package eu.telecom_breatgne.mutomatic;
+package eu.telecom_bretagne.mutomatic;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

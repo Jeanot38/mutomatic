@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="eu.telecom_breatgne.mutomatic" >
+    package="eu.telecom_bretagne.mutomatic" >
 
     <application
         android:allowBackup="true"
