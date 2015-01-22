@@ -13,14 +13,15 @@ import java.util.LinkedList;
 public class CalendarWrapper {
 
     private ContentResolver contentResolver;
-    private LinkedList <Calendar> calendars = new LinkedList<>();
-    private LinkedList <Event> events = new LinkedList<>();
+    private LinkedList <Calendar> calendars = null;
+    private LinkedList <Event> events = null;
 
     public CalendarWrapper(ContentResolver cr) {
         this.contentResolver = cr;
     }
 
     public LinkedList <Calendar> getCalendars() {
+        calendars = new LinkedList<>();
         Cursor cur = null;
         Uri uri = Calendars.CONTENT_URI;
         /*String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
@@ -38,19 +39,22 @@ public class CalendarWrapper {
         return calendars;
     }
 
-    public LinkedList <Event> getEvents() {
+    public LinkedList <Event> getEvents(Long day) {
+        events = new LinkedList<>();
         Cursor cur = null;
         Uri uri = Events.CONTENT_URI;
-        /*String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + Calendars.OWNER_ACCOUNT + " = ?))";
-        String[] selectionArgs = new String[] {"sampleuser@gmail.com", "com.google",
-                "sampleuser@gmail.com"};*/
-// Submit the query and get a Cursor object back.
-        cur = contentResolver.query(uri, Event.PROJECTION, null, null, null);
+        String selection = "";
+        String[] arguments = null;
+
+        if (day != null) {
+            selection = "((" + Events.DTSTART + " >= ?) AND (" + Events.DTEND + " < ?))";
+            arguments = new String[] {Long.toString(day), Long.toString(day+3600*1000*24)};
+        }
+
+        cur = contentResolver.query(uri, Event.PROJECTION, selection, arguments, null);
 
         while(cur.moveToNext()) {
-            events.add(new Event(cur.getInt(Event.ID_INDEX), cur.getInt(Event.DTSTART_INDEX), cur.getInt(Event.DTEND_INDEX), cur.getString(Event.TITLE_INDEX), cur.getString(Event.DESCRIPTION_INDEX), cur.getInt(Event.AVAILABILITY_INDEX)));
+            events.add(new Event(cur.getInt(Event.ID_INDEX), cur.getLong(Event.DTSTART_INDEX), cur.getLong(Event.DTEND_INDEX), cur.getString(Event.TITLE_INDEX), cur.getString(Event.DESCRIPTION_INDEX), cur.getInt(Event.AVAILABILITY_INDEX)));
         }
 
         return events;

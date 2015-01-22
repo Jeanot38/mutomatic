@@ -8,8 +8,8 @@ import android.provider.CalendarContract.*;
 public class Event {
 
     private int id;
-    private int dtStart;
-    private int dtEnd;
+    private long dtStart;
+    private long dtEnd;
     private String title;
     private String description;
     private int availability;
@@ -29,7 +29,7 @@ public class Event {
     public static final int DESCRIPTION_INDEX = 4;
     public static final int AVAILABILITY_INDEX = 5;
 
-    public Event(int id, int dtStart, int dtEnd, String title, String description, int availability) {
+    public Event(int id, long dtStart, long dtEnd, String title, String description, int availability) {
         this.id = id;
         this.dtStart = dtStart;
         this.dtEnd = dtEnd;
@@ -42,11 +42,11 @@ public class Event {
         return id;
     }
 
-    public int getDtStart() {
+    public long getDtStart() {
         return dtStart;
     }
 
-    public int getDtEnd() {
+    public long getDtEnd() {
         return dtEnd;
     }
 
