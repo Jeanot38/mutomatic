@@ -2,10 +2,12 @@ package eu.telecom_bretagne.mutomatic.lib;
 
 import android.provider.CalendarContract.*;
 
+import java.io.Serializable;
+
 /**
  * Created by math on 22/01/15.
  */
-public class Event {
+public class Event implements Serializable {
 
     private int id;
     private long dtStart;
@@ -60,5 +62,30 @@ public class Event {
 
     public int getAvailability() {
         return availability;
+    }
+
+    public boolean equals(Object o) {
+        if(o instanceof Event) {
+            Event event = (Event) o;
+
+            if(title != null && !title.equals(event.getTitle())) {
+                return false;
+            } else if(title == null && event.getTitle() != null) {
+                return false;
+            }
+
+            if(description != null && !description.equals(event.getDescription())) {
+                return false;
+            } else if(description == null && event.getDescription() != null) {
+                return false;
+            }
+
+            return id == event.getId() &&
+                    dtStart == event.getDtStart() &&
+                    dtEnd == event.getDtEnd() &&
+                    availability == event.getAvailability();
+        }
+
+        return false;
     }
 }

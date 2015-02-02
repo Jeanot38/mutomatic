@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract.*;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -22,14 +23,8 @@ public class CalendarWrapper {
 
     public LinkedList <Calendar> getCalendars() {
         calendars = new LinkedList<>();
-        Cursor cur = null;
+        Cursor cur;
         Uri uri = Calendars.CONTENT_URI;
-        /*String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + Calendars.OWNER_ACCOUNT + " = ?))";
-        String[] selectionArgs = new String[] {"sampleuser@gmail.com", "com.google",
-                "sampleuser@gmail.com"};*/
-// Submit the query and get a Cursor object back.
         cur = contentResolver.query(uri, Calendar.PROJECTION, null, null, null);
 
         while(cur.moveToNext()) {
@@ -39,16 +34,36 @@ public class CalendarWrapper {
         return calendars;
     }
 
-    public LinkedList <Event> getEvents(Long day) {
+    public LinkedList <Event> getEvents(Long day, Integer[] calendarIdToSelect) {
         events = new LinkedList<>();
-        Cursor cur = null;
+        Cursor cur;
         Uri uri = Events.CONTENT_URI;
         String selection = "";
         String[] arguments = null;
+        ArrayList<String> argumentsCalendar;
 
         if (day != null) {
-            selection = "((" + Events.DTSTART + " >= ?) AND (" + Events.DTEND + " < ?))";
+            selection = "((" + Events.DTEND + " >= ?) AND (" + Events.DTEND + " < ?)) ";
             arguments = new String[] {Long.toString(day), Long.toString(day+3600*1000*24)};
+        }
+
+        if(calendarIdToSelect != null) {
+            argumentsCalendar = new ArrayList<>();
+
+            if(day != null) {
+                selection += "AND ";
+                argumentsCalendar.add(arguments[0]);
+                argumentsCalendar.add(arguments[1]);
+            }
+
+            for(Integer idCalendar : calendarIdToSelect) {
+                selection += Events.CALENDAR_ID+" = ? AND ";
+                argumentsCalendar.add(Integer.toString(idCalendar));
+            }
+
+            selection = selection.substring(0, selection.length()-4);
+            arguments = new String[argumentsCalendar.size()];
+            argumentsCalendar.toArray(arguments);
         }
 
         cur = contentResolver.query(uri, Event.PROJECTION, selection, arguments, null);
@@ -57,6 +72,9 @@ public class CalendarWrapper {
             events.add(new Event(cur.getInt(Event.ID_INDEX), cur.getLong(Event.DTSTART_INDEX), cur.getLong(Event.DTEND_INDEX), cur.getString(Event.TITLE_INDEX), cur.getString(Event.DESCRIPTION_INDEX), cur.getInt(Event.AVAILABILITY_INDEX)));
         }
 
+        cur.close();
+
         return events;
     }
+
 }
