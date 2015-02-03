@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Mut\'oMatic</string>
-    <string name="hello_world">Salut Bilou !!</string>
     <string name="action_settings">Settings</string>
 
 </resources>
