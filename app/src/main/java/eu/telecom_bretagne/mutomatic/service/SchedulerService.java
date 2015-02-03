@@ -5,19 +5,13 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
-import eu.telecom_bretagne.mutomatic.lib.AudioReceiver;
-import eu.telecom_bretagne.mutomatic.lib.Calendar;
-import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
-import eu.telecom_bretagne.mutomatic.lib.Event;
-import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
+import eu.telecom_bretagne.mutomatic.lib.*;
 
 /**
  * Created by math on 21/01/15.
@@ -25,9 +19,6 @@ import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 public class SchedulerService extends IntentService {
 
     private static LinkedList<EventPendingIntentMapping> scheduledTasks = null;
-
-    private static final boolean ENABLED = true;
-    private static final int REFRESH_PERIOD = 30;
 
 
     public SchedulerService() {
@@ -37,7 +28,11 @@ public class SchedulerService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        if(ENABLED == true) {
+        Log.d("SchedulerService", "Launching service...");
+
+        Parameters.configurePreferences(getApplicationContext());
+
+        if(Parameters.getBooleanPreference(Parameters.ENABLED) == true) {
 
             /*Handler handler = new Handler(Looper.getMainLooper());
 
@@ -133,11 +128,11 @@ public class SchedulerService extends IntentService {
     @Override
     public void onDestroy() {
 
-        if(ENABLED == true) {
+        if(Parameters.getBooleanPreference(Parameters.ENABLED) == true) {
             AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarm.set(
                     AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + (1000 * REFRESH_PERIOD),
+                    System.currentTimeMillis() + (1000 * Parameters.getIntPreference(Parameters.SCHEDULING_INTERVAL)),
                     PendingIntent.getService(this, 0, new Intent(this, SchedulerService.class), 0)
             );
         }
