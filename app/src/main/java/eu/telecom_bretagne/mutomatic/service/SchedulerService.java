@@ -20,6 +20,9 @@ public class SchedulerService extends IntentService {
 
     private static LinkedList<EventPendingIntentMapping> scheduledTasks = null;
 
+    //TODO A revoir
+    public static boolean isFinished = false;
+
 
     public SchedulerService() {
         super("SchedulerService");
@@ -84,7 +87,6 @@ public class SchedulerService extends IntentService {
                 int counterScheduledTasks = 0;
 
                 // On parcourt l'ensemble des événements du calendrier pour que les tâches planifiées associées soient crées et qu'on supprime celles dont les événements ont été supprimées
-
                 for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUseArray)) {
 
                     // Pour éviter les IndexOutOfBoundException et permet de repérer la fin de la liste scheduledTasks. Le else représente la fin de la liste, on ajoute donc tous les événements restants
@@ -122,7 +124,7 @@ public class SchedulerService extends IntentService {
 
             }
         }
-
+        isFinished = true;
     }
 
     @Override

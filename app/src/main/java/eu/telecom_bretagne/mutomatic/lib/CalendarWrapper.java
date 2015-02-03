@@ -51,17 +51,22 @@ public class CalendarWrapper {
             argumentsCalendar = new ArrayList<>();
 
             if(day != null) {
-                selection += "AND ";
+                selection += "AND (";
                 argumentsCalendar.add(arguments[0]);
                 argumentsCalendar.add(arguments[1]);
             }
 
             for(Integer idCalendar : calendarIdToSelect) {
-                selection += Events.CALENDAR_ID+" = ? AND ";
+                selection += Events.CALENDAR_ID+" = ? OR ";
                 argumentsCalendar.add(Integer.toString(idCalendar));
             }
 
             selection = selection.substring(0, selection.length()-4);
+
+            if(day != null) {
+                selection += ")";
+            }
+
             arguments = new String[argumentsCalendar.size()];
             argumentsCalendar.toArray(arguments);
         }
