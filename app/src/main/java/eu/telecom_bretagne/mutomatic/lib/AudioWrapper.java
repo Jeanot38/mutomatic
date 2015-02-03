@@ -7,46 +7,30 @@ import android.media.AudioManager;
  * Created by Vincent on 22/01/2015.
  */
 public class AudioWrapper {
-    AudioManager audioWrapper;
-    int previousRingerMode;
 
-    public AudioWrapper(Context c) {
-        Context context = c;
+    private AudioManager audioWrapper;
+    private Integer previousRingerMode = null;
+
+    public AudioWrapper(Context context) {
         this.audioWrapper = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     public int getCurrentSettings() {
-        int currentSettings = audioWrapper.getRingerMode();
-        return currentSettings;
+        return audioWrapper.getRingerMode();
     }
 
-    public void setSettings(int i) {
-        String settings;
-        switch (i) {
-            case 0:
-                audioWrapper.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                settings = "Silencieux";
-                break;
-            case 1:
-                audioWrapper.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                settings = "Vibreur";
-                break;
-            case 2:
-                audioWrapper.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                settings = "Normal";
-                break;
-            default:
-                settings = "Mode invalide";
-                break;
-        }
+    public void setPreviousRingerMode(Integer previousRingerMode) {
+        this.previousRingerMode = previousRingerMode;
     }
 
     public void autoSettings() {
-        this.previousRingerMode=audioWrapper.getRingerMode();
+        this.setPreviousRingerMode(audioWrapper.getRingerMode());
         audioWrapper.setRingerMode(AudioManager.RINGER_MODE_SILENT);   //Application du profil correspondant (silent par defaut)
     }
 
     public void restoreSettings(){
         audioWrapper.setRingerMode(this.previousRingerMode);
+
+        this.setPreviousRingerMode(null);
     }
 }
