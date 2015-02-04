@@ -39,7 +39,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="horizontal"
         >
         <TextView
@@ -61,25 +61,12 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-    >
-        <ScrollView
-            android:id="@+id/scroll"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
         >
-            <LinearLayout
-                android:id="@+id/layoutScroll"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-            >
-            </LinearLayout>
-
-        </ScrollView>
-
+        <TextView
+            android:id="@+id/dateJour2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="testDynamic"
+            />
     </LinearLayout>
 </LinearLayout>
