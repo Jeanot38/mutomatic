@@ -8,58 +8,94 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-    >
+        >
         <TextView
-            android:id="@id/titre"
+            android:id="@+id/titre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mut'oMatic"
+            android:text="Paramètres"
             android:textStyle="bold"
             android:textSize="30dp"
             android:textColor="#ff0066ff"
             android:layout_weight="20"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
-        />
-        <TextView
-            android:id="@+id/titreSettings"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            />
+        <ImageButton
+            android:id="@id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Settings"
-            android:textStyle="bold"
-            android:textSize="30dp"
-            android:textColor="#ff0066ff"
+            android:src="@drawable/ic_action_refresh"
             android:layout_weight="20"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
-        />
+            android:layout_margin="5dp"
+            />
+        <ImageButton
+            android:id="@id/settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_overflow"
+            android:layout_weight="20"
+            android:layout_margin="5dp"
+            />
     </LinearLayout>
     <TextView
+        android:id="@+id/choiceDefaultProfile"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Quel profil voulez-vous par défaut ?"
         android:textSize="20dp"
-        android:layout_margin="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
         />
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
     >
-        <CheckBox
-            android:id="@+id/checkSilent"
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+        >
+            <RadioButton
+                android:id="@+id/checkSilent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Silencieux"
+                android:layout_weight="20"
+                android:layout_marginLeft="15dp"
+                android:checked="true"
+            />
+            <RadioButton
+                android:id="@+id/checkVibrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vibreur"
+                android:layout_weight="20"
+            />
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+    >
+        <TextView
+            android:id="@+id/choiceActivate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Silencieux"
-            android:layout_weight="20"
+            android:text="Application active "
+            android:textSize="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
         />
-        <CheckBox
-            android:id="@+id/checkVibrate"
+        <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vibreur"
-            android:layout_weight="20"
+            android:checked="true"
+            android:layout_margin="10dp"
         />
+
     </LinearLayout>
+
 </LinearLayout>

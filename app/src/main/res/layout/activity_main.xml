@@ -18,22 +18,24 @@
             android:textSize="30dp"
             android:textColor="#ff0066ff"
             android:layout_weight="20"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="20dp"
-            />
-        <Button
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+        />
+        <ImageButton
             android:id="@+id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Refresh"
+            android:src="@drawable/ic_action_refresh"
             android:layout_weight="20"
+            android:layout_margin="5dp"
             />
-        <Button
+        <ImageButton
             android:id="@+id/settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Settings"
+            android:src="@drawable/ic_action_overflow"
             android:layout_weight="20"
+            android:layout_margin="5dp"
             />
     </LinearLayout>
 
@@ -46,13 +48,20 @@
             android:id="@+id/titreAgenda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Voici les événements prévus au "
+            android:text="Evénements prévus au "
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
             />
         <TextView
             android:id="@+id/dateJour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="dateJour"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             />
     </LinearLayout>
 
