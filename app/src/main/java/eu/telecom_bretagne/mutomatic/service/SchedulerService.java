@@ -20,6 +20,8 @@ public class SchedulerService extends IntentService {
 
     private static LinkedList<EventPendingIntentMapping> scheduledTasks = null;
 
+    public static boolean isFinished = false;
+
 
     public SchedulerService() {
         super("SchedulerService");
@@ -122,6 +124,8 @@ public class SchedulerService extends IntentService {
 
             }
         }
+
+        isFinished = true;
 
     }
 
