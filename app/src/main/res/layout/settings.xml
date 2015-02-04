@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
 >
     <TextView
-        android:id="@+id/titre"
+        android:id="@id/titre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mut'oMatic"
@@ -17,7 +17,7 @@
         android:layout_marginLeft="20dp"
         />
     <TextView
-        android:id="@+id/titre"
+        android:id="@+id/titreSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Settings"

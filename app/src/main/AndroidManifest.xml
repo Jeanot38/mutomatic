@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".UIActivity" />
+        <activity android:name=".SettingsActivity"/>
         <receiver android:name=".lib.AudioReceiver"/>
         <service
             android:name=".service.SchedulerService"/>
