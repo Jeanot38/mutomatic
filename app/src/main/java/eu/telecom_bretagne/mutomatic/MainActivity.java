@@ -2,17 +2,24 @@ package eu.telecom_bretagne.mutomatic;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.SystemClock;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
-import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
+import eu.telecom_bretagne.mutomatic.lib.AudioWrapper;
 import eu.telecom_bretagne.mutomatic.lib.Event;
+import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
+import eu.telecom_bretagne.mutomatic.lib.Parameters;
 import eu.telecom_bretagne.mutomatic.service.SchedulerService;
 
 
@@ -21,27 +28,19 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
-        //Log.i("MainActivity", "Service should be started");
+        Parameters.configurePreferences(getApplicationContext());
 
-        /*CalendarWrapper cw = new CalendarWrapper(getContentResolver());
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        try {
-            date = sdf.parse("22/01/2015");
-        } catch(Exception e) {}
+        Parameters.setPreference(Parameters.ENABLED, true);
+        Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 30);
 
-        LinkedList<Event> events = cw.getEvents(date.getTime());
-
-        Log.d("Main Activity","Voici le premier event : "+events.get(0).getId());
-        Log.d("Main Activity","Sa date de début : "+events.get(0).getDtStart());
-        Log.d("Main Activity","Son titre : "+events.get(0).getTitle());
-        Log.d("Main Activity","Sa description : "+events.get(0).getDescription());*/
-
+        // Service start
         startService(new Intent(this, SchedulerService.class));
-    }
+        Intent intent = new Intent(this, UIActivity.class);
+        startActivity(intent);
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,7 +58,7 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            //return true;
         }
 
         return super.onOptionsItemSelected(item);
