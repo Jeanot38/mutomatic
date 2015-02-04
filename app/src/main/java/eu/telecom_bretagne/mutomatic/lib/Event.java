@@ -15,6 +15,8 @@ public class Event implements Serializable {
     private String title;
     private String description;
     private int availability;
+    private int calendarId;
+    private int calendarColor;
 
     public static final String[] PROJECTION = new String[] {
             Events._ID,
@@ -22,7 +24,9 @@ public class Event implements Serializable {
             Events.DTEND,
             Events.TITLE,
             Events.DESCRIPTION,
-            Events.AVAILABILITY
+            Events.AVAILABILITY,
+            Events.CALENDAR_ID,
+            Events.CALENDAR_COLOR
     };
     public static final int ID_INDEX = 0;
     public static final int DTSTART_INDEX = 1;
@@ -30,14 +34,18 @@ public class Event implements Serializable {
     public static final int TITLE_INDEX = 3;
     public static final int DESCRIPTION_INDEX = 4;
     public static final int AVAILABILITY_INDEX = 5;
+    public static final int CALENDAR_ID_INDEX = 6;
+    public static final int CALENDAR_COLOR_INDEX = 7;
 
-    public Event(int id, long dtStart, long dtEnd, String title, String description, int availability) {
+    public Event(int id, long dtStart, long dtEnd, String title, String description, int availability, int calendarId, int calendarColor) {
         this.id = id;
         this.dtStart = dtStart;
         this.dtEnd = dtEnd;
         this.title = title;
         this.description = description;
         this.availability = availability;
+        this.calendarId = calendarId;
+        this.calendarColor = calendarColor;
     }
 
     public int getId() {
@@ -63,6 +71,10 @@ public class Event implements Serializable {
     public int getAvailability() {
         return availability;
     }
+
+    public int getCalendarId() { return calendarId; }
+
+    public int getCalendarColor() { return calendarColor; }
 
     public boolean equals(Object o) {
         if(o instanceof Event) {

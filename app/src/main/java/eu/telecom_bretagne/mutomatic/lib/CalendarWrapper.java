@@ -151,7 +151,7 @@ public class CalendarWrapper {
 
         // Create Event objects and add to the list
         while(cur.moveToNext()) {
-            events.add(new Event(cur.getInt(Event.ID_INDEX), cur.getLong(Event.DTSTART_INDEX), cur.getLong(Event.DTEND_INDEX), cur.getString(Event.TITLE_INDEX), cur.getString(Event.DESCRIPTION_INDEX), cur.getInt(Event.AVAILABILITY_INDEX)));
+            events.add(new Event(cur.getInt(Event.ID_INDEX), cur.getLong(Event.DTSTART_INDEX), cur.getLong(Event.DTEND_INDEX), cur.getString(Event.TITLE_INDEX), cur.getString(Event.DESCRIPTION_INDEX), cur.getInt(Event.AVAILABILITY_INDEX), cur.getInt(Event.CALENDAR_ID_INDEX), cur.getInt(Event.CALENDAR_COLOR_INDEX)));
         }
 
         cur.close();
