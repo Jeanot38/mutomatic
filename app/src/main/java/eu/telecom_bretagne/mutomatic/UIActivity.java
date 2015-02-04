@@ -1,8 +1,10 @@
 package eu.telecom_bretagne.mutomatic;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,12 @@ import eu.telecom_bretagne.mutomatic.service.SchedulerService;
  */
 public class UIActivity extends Activity {
 
+    //Button for refresh event which are displays
+    private Button refresh = null;
+
+    //Button to access settings
+    private Button settings = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -31,8 +39,10 @@ public class UIActivity extends Activity {
 
 
 
-        // Add component to the layout
+        // Get the view from the layout
         LinearLayout layoutScroll = (LinearLayout)findViewById(R.id.layoutScroll);
+        refresh = (Button)findViewById(R.id.refresh);
+        settings = (Button)findViewById(R.id.settings);
 
         // Destruct all elements in the layout
         layoutScroll.removeAllViewsInLayout();
@@ -61,18 +71,31 @@ public class UIActivity extends Activity {
             long hD = task.getEvent().getDtStart();
             long hF = task.getEvent().getDtEnd();
 
-            TextView titre = new TextView(this);
-            titre.setText(title);
+            TextView nomTitre = new TextView(this);
+            nomTitre.setText(title);
 
+            TextView start = new TextView(this);
+            start.setText(" | Début : ");
             TextView hStart = new TextView(this);
             hStart.setText(time.format(hD));
 
+            TextView end = new TextView(this);
+            end.setText(" | Fin : ");
             TextView hEnd = new TextView(this);
             hEnd.setText(time.format(hF));
 
-            layoutScroll.addView(titre);
-            layoutScroll.addView(hStart);
-            layoutScroll.addView(hEnd);
+            LinearLayout displayEvent=new LinearLayout(this);
+            displayEvent.setOrientation(LinearLayout.HORIZONTAL);
+            // Set the color of the calendar from which the event is taken
+            displayEvent.setBackgroundColor(Color.RED);
+
+            ((LinearLayout) findViewById(R.id.layoutScroll)).addView(displayEvent);
+
+            displayEvent.addView(nomTitre);
+            displayEvent.addView(start);
+            displayEvent.addView(hStart);
+            displayEvent.addView(end);
+            displayEvent.addView(hEnd);
         }
     }
 }
