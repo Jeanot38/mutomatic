@@ -1,6 +1,7 @@
 package eu.telecom_bretagne.mutomatic;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -49,7 +50,7 @@ public class UIActivity extends Activity {
         layoutScroll.removeAllViewsInLayout();
 
         // Test add layout
-        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+
         int i;
 
         //TODO A revoir
@@ -67,6 +68,29 @@ public class UIActivity extends Activity {
             System.exit(1);
         }
 
+        getEventFromCalendar();
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopService(new Intent(getApplicationContext(), SchedulerService.class));
+                startService(new Intent(getApplicationContext(), SchedulerService.class));
+                LinearLayout layoutScroll = (LinearLayout)findViewById(R.id.layoutScroll);
+                layoutScroll.removeAllViewsInLayout();
+                getEventFromCalendar();
+            }
+        });
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UIActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    public void getEventFromCalendar(){
+        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
         for (EventPendingIntentMapping task : SchedulerService.getScheduledTasks()) {
             String title = task.getEvent().getTitle();
             long hD = task.getEvent().getDtStart();
@@ -87,9 +111,9 @@ public class UIActivity extends Activity {
 
             LinearLayout displayEvent=new LinearLayout(this);
             displayEvent.setOrientation(LinearLayout.HORIZONTAL);
+
             // Set the color of the calendar from which the event is taken
-            //task.getEvent().
-            //displayEvent.setBackgroundColor(Color.RED);
+            displayEvent.setBackgroundColor(task.getEvent().getCalendarColor());
 
             ((LinearLayout) findViewById(R.id.layoutScroll)).addView(displayEvent);
 
@@ -99,13 +123,5 @@ public class UIActivity extends Activity {
             displayEvent.addView(end);
             displayEvent.addView(hEnd);
         }
-
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
     }
 }
