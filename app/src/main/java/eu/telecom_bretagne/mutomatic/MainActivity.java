@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
@@ -90,7 +92,21 @@ public class MainActivity extends Activity {
             // Test add layout
             SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 
-            for (EventPendingIntentMapping task : SchedulerService.getScheduledTasks()) {
+            LinkedList <EventPendingIntentMapping> tasks = SchedulerService.getScheduledTasks();
+
+            if(tasks.size() == 0) {
+                TextView eventInfo = new TextView(getApplicationContext());
+                eventInfo.setText("Aucun événement n'a été planifié.");
+                eventInfo.setTextColor(Color.BLACK);
+
+                LinearLayout displayEvent=new LinearLayout(getApplicationContext());
+                displayEvent.addView(eventInfo);
+
+                layoutScroll.addView(displayEvent);
+
+            }
+
+            for (EventPendingIntentMapping task : tasks) {
                 String title = task.getEvent().getTitle();
                 long hD = task.getEvent().getDtStart();
                 long hF = task.getEvent().getDtEnd();
@@ -114,13 +130,13 @@ public class MainActivity extends Activity {
                 // Set the color of the calendar from which the event is taken
                 displayEvent.setBackgroundColor(task.getEvent().getCalendarColor());
 
-                ((LinearLayout) findViewById(R.id.layoutScroll)).addView(displayEvent);
-
                 displayEvent.addView(nomTitre);
                 displayEvent.addView(start);
                 displayEvent.addView(hStart);
                 displayEvent.addView(end);
                 displayEvent.addView(hEnd);
+
+                layoutScroll.addView(displayEvent);
             }
 
         }
