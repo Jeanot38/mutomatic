@@ -28,11 +28,11 @@ public class SchedulerService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Log.d("SchedulerService", "Launching service...");
-
         Parameters.configurePreferences(getApplicationContext());
 
-        if(Parameters.getBooleanPreference(Parameters.ENABLED) == true) {
+        if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == true) {
+
+            Log.d("SchedulerService", "Launching service...");
 
             /*Handler handler = new Handler(Looper.getMainLooper());
 
@@ -120,6 +120,13 @@ public class SchedulerService extends IntentService {
                 }
 
             }
+        } else {
+            if(scheduledTasks != null && scheduledTasks.size() > 0) {
+                for (EventPendingIntentMapping epim : scheduledTasks) {
+                    cancelProfileChange(epim);
+                }
+                scheduledTasks = null;
+            }
         }
 
         Intent broadcastIntent = new Intent();
@@ -130,7 +137,7 @@ public class SchedulerService extends IntentService {
     @Override
     public void onDestroy() {
 
-        if(Parameters.getBooleanPreference(Parameters.ENABLED) == true) {
+        if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == true) {
             AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarm.set(
                     AlarmManager.RTC_WAKEUP,

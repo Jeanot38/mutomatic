@@ -6,11 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,8 +35,9 @@ public class MainActivity extends Activity {
 
         Parameters.configurePreferences(getApplicationContext());
 
-        Parameters.setPreference(Parameters.ENABLED, true);
-        Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 60);
+        if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == null) Parameters.setPreference(Parameters.APPLICATION_ENABLED, true);
+        if(Parameters.getIntPreference(Parameters.SCHEDULING_INTERVAL) == null) Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 60);
+        if(Parameters.getIntPreference(Parameters.PROFILE_SELECTED) == null) Parameters.setPreference(Parameters.PROFILE_SELECTED, AudioManager.RINGER_MODE_SILENT);
 
         IntentFilter filter = new IntentFilter(ResponseReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -94,7 +95,17 @@ public class MainActivity extends Activity {
 
             LinkedList <EventPendingIntentMapping> tasks = SchedulerService.getScheduledTasks();
 
-            if(tasks.size() == 0) {
+            //TODO A revérifier
+            if(tasks == null) {
+                TextView eventInfo = new TextView(getApplicationContext());
+                eventInfo.setText("Le service est désactivé.");
+                eventInfo.setTextColor(Color.BLACK);
+
+                LinearLayout displayEvent=new LinearLayout(getApplicationContext());
+                displayEvent.addView(eventInfo);
+
+                layoutScroll.addView(displayEvent);
+            } else if(tasks.size() == 0) {
                 TextView eventInfo = new TextView(getApplicationContext());
                 eventInfo.setText("Aucun événement n'a été planifié.");
                 eventInfo.setTextColor(Color.BLACK);
@@ -104,41 +115,42 @@ public class MainActivity extends Activity {
 
                 layoutScroll.addView(displayEvent);
 
+            } else {
+
+                for (EventPendingIntentMapping task : tasks) {
+                    String title = task.getEvent().getTitle();
+                    long hD = task.getEvent().getDtStart();
+                    long hF = task.getEvent().getDtEnd();
+
+                    TextView nomTitre = new TextView(getApplicationContext());
+                    nomTitre.setText(title);
+
+                    TextView start = new TextView(getApplicationContext());
+                    start.setText(" | Début : ");
+                    TextView hStart = new TextView(getApplicationContext());
+                    hStart.setText(time.format(hD));
+
+                    TextView end = new TextView(getApplicationContext());
+                    end.setText(" | Fin : ");
+                    TextView hEnd = new TextView(getApplicationContext());
+                    hEnd.setText(time.format(hF));
+
+                    LinearLayout displayEvent = new LinearLayout(getApplicationContext());
+                    displayEvent.setOrientation(LinearLayout.HORIZONTAL);
+                    displayEvent.setId(task.getEvent().hashCode());
+
+                    // Set the color of the calendar from which the event is taken
+                    displayEvent.setBackgroundColor(task.getEvent().getCalendarColor());
+
+                    displayEvent.addView(nomTitre);
+                    displayEvent.addView(start);
+                    displayEvent.addView(hStart);
+                    displayEvent.addView(end);
+                    displayEvent.addView(hEnd);
+
+                    layoutScroll.addView(displayEvent);
+                }
             }
-
-            for (EventPendingIntentMapping task : tasks) {
-                String title = task.getEvent().getTitle();
-                long hD = task.getEvent().getDtStart();
-                long hF = task.getEvent().getDtEnd();
-
-                TextView nomTitre = new TextView(getApplicationContext());
-                nomTitre.setText(title);
-
-                TextView start = new TextView(getApplicationContext());
-                start.setText(" | Début : ");
-                TextView hStart = new TextView(getApplicationContext());
-                hStart.setText(time.format(hD));
-
-                TextView end = new TextView(getApplicationContext());
-                end.setText(" | Fin : ");
-                TextView hEnd = new TextView(getApplicationContext());
-                hEnd.setText(time.format(hF));
-
-                LinearLayout displayEvent=new LinearLayout(getApplicationContext());
-                displayEvent.setOrientation(LinearLayout.HORIZONTAL);
-
-                // Set the color of the calendar from which the event is taken
-                displayEvent.setBackgroundColor(task.getEvent().getCalendarColor());
-
-                displayEvent.addView(nomTitre);
-                displayEvent.addView(start);
-                displayEvent.addView(hStart);
-                displayEvent.addView(end);
-                displayEvent.addView(hEnd);
-
-                layoutScroll.addView(displayEvent);
-            }
-
         }
     }
 
