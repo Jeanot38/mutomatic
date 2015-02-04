@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -87,7 +88,8 @@ public class UIActivity extends Activity {
             LinearLayout displayEvent=new LinearLayout(this);
             displayEvent.setOrientation(LinearLayout.HORIZONTAL);
             // Set the color of the calendar from which the event is taken
-            displayEvent.setBackgroundColor(Color.RED);
+            //task.getEvent().
+            //displayEvent.setBackgroundColor(Color.RED);
 
             ((LinearLayout) findViewById(R.id.layoutScroll)).addView(displayEvent);
 
@@ -97,5 +99,13 @@ public class UIActivity extends Activity {
             displayEvent.addView(end);
             displayEvent.addView(hEnd);
         }
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 }
