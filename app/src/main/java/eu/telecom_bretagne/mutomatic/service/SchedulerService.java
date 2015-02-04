@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
+import eu.telecom_bretagne.mutomatic.MainActivity;
 import eu.telecom_bretagne.mutomatic.lib.*;
 
 /**
@@ -19,10 +20,6 @@ import eu.telecom_bretagne.mutomatic.lib.*;
 public class SchedulerService extends IntentService {
 
     private static LinkedList<EventPendingIntentMapping> scheduledTasks = null;
-
-    //TODO A revoir
-    public static boolean isFinished = false;
-
 
     public SchedulerService() {
         super("SchedulerService");
@@ -125,7 +122,9 @@ public class SchedulerService extends IntentService {
             }
         }
 
-        isFinished = true;
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(MainActivity.ResponseReceiver.PROCESS_RESPONSE);
+        sendBroadcast(broadcastIntent);
     }
 
     @Override
