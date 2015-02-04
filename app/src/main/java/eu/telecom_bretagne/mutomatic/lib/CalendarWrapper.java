@@ -123,7 +123,7 @@ public class CalendarWrapper {
 
             // Add the two first arguments corresponding to day parameter...
             if(day != null) {
-                selection += "AND ";
+                selection += "AND (";
                 argumentsCalendar.add(arguments[0]);
                 argumentsCalendar.add(arguments[1]);
             }
@@ -131,7 +131,7 @@ public class CalendarWrapper {
             // ... and the add a condition for each id of calendar provided
 
             for(Integer idCalendar : calendarIdToSelect) {
-                selection += Events.CALENDAR_ID+" = ? AND ";
+                selection += Events.CALENDAR_ID+" = ? OR ";
                 argumentsCalendar.add(Integer.toString(idCalendar));
             }
 
@@ -139,6 +139,10 @@ public class CalendarWrapper {
             selection = selection.substring(0, selection.length()-4);
 
             // Convert the list to an array used by the query method above
+            if(day != null) {
+                selection += ")";
+            }
+
             arguments = new String[argumentsCalendar.size()];
             argumentsCalendar.toArray(arguments);
         }
