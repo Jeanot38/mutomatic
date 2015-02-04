@@ -16,7 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UIActivity" />
         <receiver android:name=".lib.AudioReceiver"/>
         <service
             android:name=".service.SchedulerService"/>
