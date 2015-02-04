@@ -1,27 +1,20 @@
 package eu.telecom_bretagne.mutomatic;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
@@ -32,12 +25,6 @@ public class MainActivity extends Activity {
 
     private ResponseReceiver receiver;
 
-    //Button for refresh event which are displays
-    private Button refresh = null;
-
-    //Button to access settings
-    private Button settings = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +33,7 @@ public class MainActivity extends Activity {
         Parameters.configurePreferences(getApplicationContext());
 
         Parameters.setPreference(Parameters.ENABLED, true);
-        Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 30);
+        Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 60);
 
         IntentFilter filter = new IntentFilter(ResponseReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -57,11 +44,24 @@ public class MainActivity extends Activity {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         textView.setText(sdf.format(new Date()));
 
-
-
         // Get the view from the layout
-        refresh = (Button)findViewById(R.id.refresh);
-        settings = (Button)findViewById(R.id.settings);
+        Button refresh = (Button)findViewById(R.id.refresh);
+        Button settings = (Button)findViewById(R.id.settings);
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startService(new Intent(getApplicationContext(), SchedulerService.class));
+            }
+        });
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Service start
         startService(new Intent(this, SchedulerService.class));
@@ -107,11 +107,11 @@ public class MainActivity extends Activity {
                 TextView hEnd = new TextView(getApplicationContext());
                 hEnd.setText(time.format(hF));
 
-                LinearLayout displayEvent = new LinearLayout(getApplicationContext());
+                LinearLayout displayEvent=new LinearLayout(getApplicationContext());
                 displayEvent.setOrientation(LinearLayout.HORIZONTAL);
+
                 // Set the color of the calendar from which the event is taken
-                //task.getEvent().
-                //displayEvent.setBackgroundColor(Color.RED);
+                displayEvent.setBackgroundColor(task.getEvent().getCalendarColor());
 
                 ((LinearLayout) findViewById(R.id.layoutScroll)).addView(displayEvent);
 
