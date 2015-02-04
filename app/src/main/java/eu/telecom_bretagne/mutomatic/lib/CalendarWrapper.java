@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -95,6 +96,12 @@ public class CalendarWrapper {
     public LinkedList <Event> getEvents(Long day, Integer[] calendarIdToSelect) {
 
         events = new LinkedList<>();
+        java.util.Calendar calendarLib = java.util.Calendar.getInstance();
+
+        calendarLib.setTimeInMillis(day);
+        calendarLib.add(java.util.Calendar.DATE, 1);
+        calendarLib.set(calendarLib.get(java.util.Calendar.YEAR), calendarLib.get(java.util.Calendar.MONTH), calendarLib.get(java.util.Calendar.DAY_OF_MONTH), 0, 0);
+        Long nextDay = calendarLib.getTimeInMillis();
 
         // The cursor used to get results from the Google Calendar database
         Cursor cur;
@@ -115,7 +122,7 @@ public class CalendarWrapper {
         if (day != null) {
             // ... add a WHERE condition
             selection = "((" + Events.DTEND + " >= ?) AND (" + Events.DTEND + " < ?)) ";
-            arguments = new String[] {Long.toString(day), Long.toString(day+3600*1000*24)};
+            arguments = new String[] {Long.toString(day), Long.toString(nextDay)};
         }
         // In the case of providing calendarIdToSelect array
         if(calendarIdToSelect != null) {
