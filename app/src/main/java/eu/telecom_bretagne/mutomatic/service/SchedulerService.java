@@ -124,7 +124,13 @@ public class SchedulerService extends IntentService {
 
             }
         }
+<<<<<<< HEAD
         isFinished = true;
+=======
+
+        isFinished = true;
+
+>>>>>>> 97c9440d4ddaeab3cbb40b0a8392c7662d65e700
     }
 
     @Override
