@@ -36,7 +36,7 @@ public class SchedulerService extends IntentService {
 
         Parameters.configurePreferences(getApplicationContext());
 
-        if(Parameters.getBooleanPreference(Parameters.ENABLED) == true) {
+        if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == true) {
 
             /*Handler handler = new Handler(Looper.getMainLooper());
 
@@ -71,11 +71,7 @@ public class SchedulerService extends IntentService {
             calendarsToUseArray = new Integer[calendarToUse.size()];
             calendarToUse.toArray(calendarsToUseArray);
 
-            ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-
             //When service is called for the first time
-
-            readWriteLock.readLock().lock();
 
             if (scheduledTasks == null) {
 
@@ -129,7 +125,6 @@ public class SchedulerService extends IntentService {
 
             }
 
-            readWriteLock.writeLock().unlock();
         }
 
 
@@ -142,7 +137,7 @@ public class SchedulerService extends IntentService {
     @Override
     public void onDestroy() {
 
-        if(Parameters.getBooleanPreference(Parameters.ENABLED) == true) {
+        if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == true) {
             AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarm.set(
                     AlarmManager.RTC_WAKEUP,

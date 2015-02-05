@@ -31,7 +31,6 @@ public class AudioWrapper {
 
     public void restoreSettings(){
         audioWrapper.setRingerMode(this.previousRingerMode);
-
         this.setPreviousRingerMode(null);
     }
 }
