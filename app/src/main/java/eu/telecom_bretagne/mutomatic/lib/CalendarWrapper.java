@@ -154,7 +154,7 @@ public class CalendarWrapper {
             argumentsCalendar.toArray(arguments);
         }
         // Get the list of events filtered due to parameter defined above
-        cur = contentResolver.query(uri, Event.PROJECTION, selection, arguments, null);
+        cur = contentResolver.query(uri, Event.PROJECTION, selection, arguments, Events.DTSTART);
 
         // Create Event objects and add to the list
         while(cur.moveToNext()) {

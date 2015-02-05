@@ -89,5 +89,32 @@
         />
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/textCalendarChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quel(s) calendrier(s) prendre en compte ?"
+        android:textSize="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+    />
+    <ScrollView
+        android:id="@+id/scrollCalendar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+    >
+        <LinearLayout
+            android:id="@+id/layoutScrollCalendar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+        >
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

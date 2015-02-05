@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
@@ -93,7 +96,18 @@ public class MainActivity extends Activity {
             // Test add layout
             SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 
-            LinkedList <EventPendingIntentMapping> tasks = SchedulerService.getScheduledTasks();
+            CopyOnWriteArrayList<EventPendingIntentMapping> tasks = SchedulerService.getScheduledTasks();
+            LinearLayout.LayoutParams parameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams marginStart = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            LinearLayout.LayoutParams paramEventName = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            paramEventName.setMargins(15, 15, 0, 0); // paramEventName.setMargins(left, top, right, bottom);
+            LinearLayout.LayoutParams paramEventInfo = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            paramEventInfo.setMargins(15, 0, 0, 15); // paramEventInfo.setMargins(left, top, right, bottom);
+            LinearLayout.LayoutParams paramDiplayEvent = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            paramDiplayEvent.setMargins(0, 0, 0, 15); // paramDiplayEvent.setMargins(left, top, right, bottom);
+
+
 
             //TODO A revérifier
             if(tasks == null) {
@@ -122,32 +136,32 @@ public class MainActivity extends Activity {
                     long hD = task.getEvent().getDtStart();
                     long hF = task.getEvent().getDtEnd();
 
-                    TextView nomTitre = new TextView(getApplicationContext());
-                    nomTitre.setText(title);
+                    //Creation of the dynamic TextView
+                    TextView eventName = new TextView(getApplicationContext());
+                    eventName.setText(title);
+                    eventName.setTextColor(Color.WHITE);
+                    eventName.setTypeface(null, Typeface.BOLD);
+                    eventName.setLayoutParams(paramEventName);
 
-                    TextView start = new TextView(getApplicationContext());
-                    start.setText(" | Début : ");
-                    TextView hStart = new TextView(getApplicationContext());
-                    hStart.setText(time.format(hD));
+                    TextView eventInfo = new TextView(getApplicationContext());
+                    eventInfo.setText(time.format(hD) + " - " + time.format(hF));
+                    eventInfo.setTextColor(Color.WHITE);
+                    eventInfo.setLayoutParams(paramEventInfo);
 
-                    TextView end = new TextView(getApplicationContext());
-                    end.setText(" | Fin : ");
-                    TextView hEnd = new TextView(getApplicationContext());
-                    hEnd.setText(time.format(hF));
 
+                    //Creation of the title layout
                     LinearLayout displayEvent = new LinearLayout(getApplicationContext());
-                    displayEvent.setOrientation(LinearLayout.HORIZONTAL);
-                    displayEvent.setId(task.getEvent().hashCode());
+                    displayEvent.setOrientation(LinearLayout.VERTICAL);
+                    displayEvent.setLayoutParams(paramDiplayEvent);
+
+                    //Link the TextView with the layout
+                    displayEvent.addView(eventName);
+                    displayEvent.addView(eventInfo);
 
                     // Set the color of the calendar from which the event is taken
                     displayEvent.setBackgroundColor(task.getEvent().getCalendarColor());
 
-                    displayEvent.addView(nomTitre);
-                    displayEvent.addView(start);
-                    displayEvent.addView(hStart);
-                    displayEvent.addView(end);
-                    displayEvent.addView(hEnd);
-
+                    //Display views
                     layoutScroll.addView(displayEvent);
                 }
             }

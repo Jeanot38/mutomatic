@@ -11,6 +11,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 
+import java.util.LinkedList;
+
+import eu.telecom_bretagne.mutomatic.lib.Calendar;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
 import eu.telecom_bretagne.mutomatic.service.SchedulerService;
 
@@ -67,6 +70,8 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        /*LinkedList<Calendar> calendars = new LinkedList<>();
+        calendars=*/
     }
 
 
