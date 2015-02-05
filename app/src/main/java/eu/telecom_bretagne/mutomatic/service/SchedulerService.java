@@ -9,14 +9,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import eu.telecom_bretagne.mutomatic.MainActivity;
-import eu.telecom_bretagne.mutomatic.lib.*;
+import eu.telecom_bretagne.mutomatic.lib.AudioReceiver;
+import eu.telecom_bretagne.mutomatic.lib.Calendar;
+import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
+import eu.telecom_bretagne.mutomatic.lib.Event;
+import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
+import eu.telecom_bretagne.mutomatic.lib.Parameters;
 
 /**
  * Created by math on 21/01/15.
@@ -124,7 +125,13 @@ public class SchedulerService extends IntentService {
                 }
 
             }
-
+        } else {
+            if(scheduledTasks != null && scheduledTasks.size() > 0) {
+                for (EventPendingIntentMapping epim : scheduledTasks) {
+                    cancelProfileChange(epim);
+                }
+                scheduledTasks = null;
+            }
         }
 
 
