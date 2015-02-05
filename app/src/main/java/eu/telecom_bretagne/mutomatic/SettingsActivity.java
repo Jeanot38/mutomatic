@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.LinkedList;
 
 import eu.telecom_bretagne.mutomatic.lib.Calendar;
+import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
 import eu.telecom_bretagne.mutomatic.service.SchedulerService;
 
@@ -70,8 +74,14 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        /*LinkedList<Calendar> calendars = new LinkedList<>();
-        calendars=*/
+        LinkedList<Calendar> calendars = new LinkedList<>();
+        CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
+        calendars= calendarWrapper.getCalendars();
+        for (Calendar calendar : calendars){
+            String calendarName = calendar.getName();
+            CheckBox calendarCheckbox = new CheckBox(getApplicationContext());
+            calendarCheckbox.setText(calendarName);
+        }
     }
 
 
