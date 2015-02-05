@@ -13,6 +13,7 @@ public class AudioWrapper {
 
     public AudioWrapper(Context context) {
         this.audioWrapper = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        Parameters.configurePreferences(context);
     }
 
     public int getCurrentSettings() {
@@ -25,7 +26,7 @@ public class AudioWrapper {
 
     public void autoSettings() {
         this.setPreviousRingerMode(audioWrapper.getRingerMode());
-        audioWrapper.setRingerMode(AudioManager.RINGER_MODE_SILENT);   //Application du profil correspondant (silent par defaut)
+        audioWrapper.setRingerMode(Parameters.getIntPreference(Parameters.PROFILE_SELECTED));   //Application du profil correspondant (silent par defaut)
     }
 
     public void restoreSettings(){

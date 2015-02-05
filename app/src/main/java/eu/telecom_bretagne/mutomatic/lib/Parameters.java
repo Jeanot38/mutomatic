@@ -2,6 +2,7 @@ package eu.telecom_bretagne.mutomatic.lib;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Switch;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,8 +13,10 @@ import java.util.Set;
  */
 public abstract class Parameters {
 
-    public static final String ENABLED = "eu.telecom_bretagne.enabled";
-    public static final String SCHEDULING_INTERVAL = "eu.telecom_bretagne.scheduling_interval";
+    public static final String APPLICATION_ENABLED = "eu.telecom_bretagne.mutomatic.application_enabled";
+    public static final String SCHEDULING_INTERVAL = "eu.telecom_bretagne.mutomatic.scheduling_interval";
+    public static final String PROFILE_SELECTED = "eu.telecom_bretagne.mutomatic.profile_selected";
+
 
     private static SharedPreferences sharedPreferences;
 
@@ -24,10 +27,12 @@ public abstract class Parameters {
     public static Boolean getBooleanPreference(String key) {
         if(sharedPreferences != null) {
             Integer preference = getIntPreference(key);
-            if(preference == 1) {
-                return true;
-            } else if(preference == 0) {
-                return false;
+            if(preference != null) {
+                if (preference == 1) {
+                    return true;
+                } else if (preference == 0) {
+                    return false;
+                }
             }
         }
 
@@ -36,7 +41,12 @@ public abstract class Parameters {
 
     public static Integer getIntPreference(String key) {
         if(sharedPreferences != null) {
-            return sharedPreferences.getInt(key, -1);
+            int pref = sharedPreferences.getInt(key, -1);
+            if(pref == -1) {
+                return null;
+            }
+
+            return pref;
         }
 
         return null;
