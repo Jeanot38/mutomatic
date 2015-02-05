@@ -51,7 +51,10 @@ public class AudioReceiver extends BroadcastReceiver {
             audioWrapper.setPreviousRingerMode(previousProfile);
             audioWrapper.restoreSettings();
 
-            SchedulerService.getScheduledTasks().remove(new EventPendingIntentMapping(event));
+            if(SchedulerService.getScheduledTasks() != null) {
+
+                SchedulerService.getScheduledTasks().remove(new EventPendingIntentMapping(event));
+            }
 
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(MainActivity.ResponseReceiver.END_SCHEDULER_PROCESS);
@@ -61,7 +64,7 @@ public class AudioReceiver extends BroadcastReceiver {
     }
 
     private EventPendingIntentMapping getEpimInstanceInList(EventPendingIntentMapping epimSearched) {
-        if(SchedulerService.getScheduledTasks().contains(epimSearched)) {
+        if(SchedulerService.getScheduledTasks() != null && SchedulerService.getScheduledTasks().contains(epimSearched)) {
             int indexOfEpimSearched = SchedulerService.getScheduledTasks().indexOf(epimSearched);
             return SchedulerService.getScheduledTasks().get(indexOfEpimSearched);
         } else {
