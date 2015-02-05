@@ -6,10 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 
 import eu.telecom_bretagne.mutomatic.MainActivity;
-import eu.telecom_bretagne.mutomatic.R;
 import eu.telecom_bretagne.mutomatic.service.SchedulerService;
 
 /**
@@ -56,7 +54,7 @@ public class AudioReceiver extends BroadcastReceiver {
             SchedulerService.getScheduledTasks().remove(new EventPendingIntentMapping(event));
 
             Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(MainActivity.ResponseReceiver.PROCESS_RESPONSE);
+            broadcastIntent.setAction(MainActivity.ResponseReceiver.END_SCHEDULER_PROCESS);
             context.sendBroadcast(broadcastIntent);
         }
 

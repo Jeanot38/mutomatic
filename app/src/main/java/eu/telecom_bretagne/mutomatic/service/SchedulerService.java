@@ -10,6 +10,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import eu.telecom_bretagne.mutomatic.MainActivity;
 import eu.telecom_bretagne.mutomatic.lib.*;
@@ -19,7 +23,7 @@ import eu.telecom_bretagne.mutomatic.lib.*;
  */
 public class SchedulerService extends IntentService {
 
-    private static LinkedList<EventPendingIntentMapping> scheduledTasks = null;
+    private static CopyOnWriteArrayList<EventPendingIntentMapping> scheduledTasks = null;
 
     public SchedulerService() {
         super("SchedulerService");
@@ -28,11 +32,11 @@ public class SchedulerService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+        Log.d("SchedulerService", "Launching service...");
+
         Parameters.configurePreferences(getApplicationContext());
 
         if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == true) {
-
-            Log.d("SchedulerService", "Launching service...");
 
             /*Handler handler = new Handler(Looper.getMainLooper());
 
@@ -71,7 +75,7 @@ public class SchedulerService extends IntentService {
 
             if (scheduledTasks == null) {
 
-                scheduledTasks = new LinkedList<>();
+                scheduledTasks = new CopyOnWriteArrayList<>();
 
                 for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUseArray)) {
                     EventPendingIntentMapping epim = new EventPendingIntentMapping(event);
@@ -120,17 +124,13 @@ public class SchedulerService extends IntentService {
                 }
 
             }
-        } else {
-            if(scheduledTasks != null && scheduledTasks.size() > 0) {
-                for (EventPendingIntentMapping epim : scheduledTasks) {
-                    cancelProfileChange(epim);
-                }
-                scheduledTasks = null;
-            }
+
         }
 
+
+
         Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(MainActivity.ResponseReceiver.PROCESS_RESPONSE);
+        broadcastIntent.setAction(MainActivity.ResponseReceiver.END_SCHEDULER_PROCESS);
         sendBroadcast(broadcastIntent);
     }
 
@@ -176,7 +176,7 @@ public class SchedulerService extends IntentService {
         }
     }
 
-    public static LinkedList<EventPendingIntentMapping> getScheduledTasks() {
+    public static CopyOnWriteArrayList<EventPendingIntentMapping> getScheduledTasks() {
         return scheduledTasks;
     }
 }
