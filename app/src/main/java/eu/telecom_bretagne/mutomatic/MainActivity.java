@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         Parameters.setPreference(Parameters.ENABLED, true);
         Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 60);
 
-        IntentFilter filter = new IntentFilter(ResponseReceiver.PROCESS_RESPONSE);
+        IntentFilter filter = new IntentFilter(ResponseReceiver.END_SCHEDULER_PROCESS);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
         registerReceiver(receiver, filter);
@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
 
     public class ResponseReceiver extends BroadcastReceiver
     {
-        public static final String PROCESS_RESPONSE = "eu.telecom_bretagne.mutomatic.process_response";
+        public static final String END_SCHEDULER_PROCESS = "eu.telecom_bretagne.mutomatic.process_response";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
             // Test add layout
             SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 
-            LinkedList <EventPendingIntentMapping> tasks = SchedulerService.getScheduledTasks();
+            CopyOnWriteArrayList<EventPendingIntentMapping> tasks = SchedulerService.getScheduledTasks();
 
             if(tasks.size() == 0) {
                 TextView eventInfo = new TextView(getApplicationContext());
