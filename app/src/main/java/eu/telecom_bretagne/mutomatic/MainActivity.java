@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
-import eu.telecom_bretagne.mutomatic.service.SchedulerService;
+import eu.telecom_bretagne.mutomatic.services.SchedulerService;
 
 
 public class MainActivity extends Activity {
