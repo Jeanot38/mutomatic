@@ -2,6 +2,7 @@ package eu.telecom_bretagne.mutomatic;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
@@ -74,13 +75,57 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        LinearLayout layoutScrollCalendar = (LinearLayout)findViewById(R.id.layoutScrollCalendar);
         LinkedList<Calendar> calendars = new LinkedList<>();
         CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
         calendars= calendarWrapper.getCalendars();
-        for (Calendar calendar : calendars){
-            String calendarName = calendar.getName();
-            CheckBox calendarCheckbox = new CheckBox(getApplicationContext());
-            calendarCheckbox.setText(calendarName);
+
+        final LinkedList <Integer> checkBoxIds = new LinkedList();
+
+        if(calendars.size() == 0) {
+            TextView eventInfo = new TextView(getApplicationContext());
+            eventInfo.setText("Aucun calendrier n'a été trouvé.");
+            eventInfo.setTextColor(Color.BLACK);
+
+            LinearLayout displayEvent=new LinearLayout(getApplicationContext());
+            displayEvent.addView(eventInfo);
+
+            layoutScrollCalendar.addView(displayEvent);
+
+        } else {
+            for (final Calendar calendar : calendars) {
+                String calendarName = calendar.getName();
+                CheckBox calendarCheckbox = new CheckBox(getApplicationContext());
+                calendarCheckbox.setText(calendarName);
+                calendarCheckbox.setTextColor(Color.BLACK);
+                ///////////////////////// EN TRAVAUX ////////////////////////////////////////
+                /*if (Parameters.getBooleanPreference(Parameters.CALENDAR_SELECTED)==true){
+                    calendarCheckbox.setChecked(true);
+                }*/
+                /////////////////////////////////////////////////////////////////////////////
+
+                checkBoxIds.add(new Integer(calendarCheckbox.getId()));
+
+                LinearLayout displayCalendar = new LinearLayout(getApplicationContext());
+                displayCalendar.setOrientation(LinearLayout.VERTICAL);
+
+                displayCalendar.addView(calendarCheckbox);
+                layoutScrollCalendar.addView(displayCalendar);
+
+
+                calendarCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        LinkedList<Integer> calendarSelected = new LinkedList();
+                        for (final Integer checkBoxId : checkBoxIds) {
+                            if (isChecked == true) {
+                            calendarSelected.add(new Integer(buttonView.getId()));
+                            }
+                        }
+                    }
+                });
+            }
+
         }
     }
 

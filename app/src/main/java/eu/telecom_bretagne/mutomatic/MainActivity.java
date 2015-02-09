@@ -18,8 +18,11 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import eu.telecom_bretagne.mutomatic.lib.Calendar;
+import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
 import eu.telecom_bretagne.mutomatic.service.SchedulerService;
@@ -36,9 +39,21 @@ public class MainActivity extends Activity {
 
         Parameters.configurePreferences(getApplicationContext());
 
+        /*LinearLayout layoutScrollCalendar = (LinearLayout)findViewById(R.id.layoutScrollCalendar);
+        LinkedList<Calendar> calendars = new LinkedList<>();
+        CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
+        calendars= calendarWrapper.getCalendars();
+        final LinkedList <Integer> calendarIds = new LinkedList();
+        for (final Calendar calendar : calendars) {
+            String calendarName = calendar.getName();
+            calendarIds.add(new Integer(calendar.getId()));
+        }*/
+
         if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == null) Parameters.setPreference(Parameters.APPLICATION_ENABLED, true);
         if(Parameters.getIntPreference(Parameters.SCHEDULING_INTERVAL) == null) Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 60);
         if(Parameters.getIntPreference(Parameters.PROFILE_SELECTED) == null) Parameters.setPreference(Parameters.PROFILE_SELECTED, AudioManager.RINGER_MODE_SILENT);
+        //if(Parameters.getIntPreference(Parameters.CALENDAR_SELECTED) == null) Parameters.setPreference(Parameters.CALENDAR_SELECTED, calendarIds);
+
 
         IntentFilter filter = new IntentFilter(ResponseReceiver.END_SCHEDULER_PROCESS);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
