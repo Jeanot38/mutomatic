@@ -9,18 +9,15 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import java.util.LinkedList;
 
 import eu.telecom_bretagne.mutomatic.lib.Calendar;
 import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
-import eu.telecom_bretagne.mutomatic.service.SchedulerService;
+import eu.telecom_bretagne.mutomatic.services.SchedulerService;
 
 /**
  * Created by Vincent on 04/02/2015.

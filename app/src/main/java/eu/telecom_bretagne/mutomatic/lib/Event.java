@@ -12,6 +12,7 @@ public class Event implements Serializable {
     private int id;
     private long dtStart;
     private long dtEnd;
+    private int allDay;
     private String title;
     private String description;
     private int availability;
@@ -22,6 +23,7 @@ public class Event implements Serializable {
             Events._ID,
             Events.DTSTART,
             Events.DTEND,
+            Events.ALL_DAY,
             Events.TITLE,
             Events.DESCRIPTION,
             Events.AVAILABILITY,
@@ -31,16 +33,18 @@ public class Event implements Serializable {
     public static final int ID_INDEX = 0;
     public static final int DTSTART_INDEX = 1;
     public static final int DTEND_INDEX = 2;
-    public static final int TITLE_INDEX = 3;
-    public static final int DESCRIPTION_INDEX = 4;
-    public static final int AVAILABILITY_INDEX = 5;
-    public static final int CALENDAR_ID_INDEX = 6;
-    public static final int CALENDAR_COLOR_INDEX = 7;
+    public static final int ALL_DAY_INDEX = 3;
+    public static final int TITLE_INDEX = 4;
+    public static final int DESCRIPTION_INDEX = 5;
+    public static final int AVAILABILITY_INDEX = 6;
+    public static final int CALENDAR_ID_INDEX = 7;
+    public static final int CALENDAR_COLOR_INDEX = 8;
 
-    public Event(int id, long dtStart, long dtEnd, String title, String description, int availability, int calendarId, int calendarColor) {
+    public Event(int id, long dtStart, long dtEnd, int allDay, String title, String description, int availability, int calendarId, int calendarColor) {
         this.id = id;
         this.dtStart = dtStart;
         this.dtEnd = dtEnd;
+        this.allDay = allDay;
         this.title = title;
         this.description = description;
         this.availability = availability;
@@ -58,6 +62,10 @@ public class Event implements Serializable {
 
     public long getDtEnd() {
         return dtEnd;
+    }
+
+    public int getAllDay() {
+        return allDay;
     }
 
     public String getTitle() {

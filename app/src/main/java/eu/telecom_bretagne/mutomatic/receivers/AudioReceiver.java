@@ -1,4 +1,4 @@
-package eu.telecom_bretagne.mutomatic.lib;
+package eu.telecom_bretagne.mutomatic.receivers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import eu.telecom_bretagne.mutomatic.MainActivity;
-import eu.telecom_bretagne.mutomatic.service.SchedulerService;
+import eu.telecom_bretagne.mutomatic.lib.AudioWrapper;
+import eu.telecom_bretagne.mutomatic.lib.Event;
+import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
+import eu.telecom_bretagne.mutomatic.services.SchedulerService;
 
 /**
  * Created by math on 23/01/15.

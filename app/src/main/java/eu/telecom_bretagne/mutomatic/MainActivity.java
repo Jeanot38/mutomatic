@@ -25,7 +25,7 @@ import eu.telecom_bretagne.mutomatic.lib.Calendar;
 import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
-import eu.telecom_bretagne.mutomatic.service.SchedulerService;
+import eu.telecom_bretagne.mutomatic.services.SchedulerService;
 
 
 public class MainActivity extends Activity {
@@ -157,7 +157,12 @@ public class MainActivity extends Activity {
                     eventName.setLayoutParams(paramEventName);
 
                     TextView eventInfo = new TextView(getApplicationContext());
-                    eventInfo.setText(time.format(hD) + " - " + time.format(hF));
+
+                    if(task.getEvent().getAllDay() == 1) {
+                        eventInfo.setText("Toute la journée");
+                    } else {
+                        eventInfo.setText(time.format(hD) + " - " + time.format(hF));
+                    }
                     eventInfo.setTextColor(Color.WHITE);
                     eventInfo.setLayoutParams(paramEventInfo);
 

@@ -1,23 +1,25 @@
-package eu.telecom_bretagne.mutomatic.service;
+package eu.telecom_bretagne.mutomatic.services;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.CalendarContract;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.telecom_bretagne.mutomatic.MainActivity;
-import eu.telecom_bretagne.mutomatic.lib.AudioReceiver;
 import eu.telecom_bretagne.mutomatic.lib.Calendar;
 import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
 import eu.telecom_bretagne.mutomatic.lib.Event;
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
+import eu.telecom_bretagne.mutomatic.receivers.AudioReceiver;
 
 /**
  * Created by math on 21/01/15.
@@ -37,23 +39,22 @@ public class SchedulerService extends IntentService {
 
         Parameters.configurePreferences(getApplicationContext());
 
+        /*Handler handler = new Handler(Looper.getMainLooper());
+
+        handler.post(new Runnable() {
+
+            @Override
+            public void run() {
+                Context context = getApplicationContext();
+                CharSequence text = "Checking Calendar modifications...";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });*/
+
         if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == true) {
-
-            /*Handler handler = new Handler(Looper.getMainLooper());
-
-            handler.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    Context context = getApplicationContext();
-                    CharSequence text = "Checking Calendar modifications...";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                }
-            });*/
-
 
             Date today = new Date();
             CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
@@ -78,11 +79,15 @@ public class SchedulerService extends IntentService {
 
                 scheduledTasks = new CopyOnWriteArrayList<>();
 
+                LinkedList<Event> events = calendarWrapper.getEvents(today.getTime(), calendarsToUseArray);
+
                 for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUseArray)) {
-                    EventPendingIntentMapping epim = new EventPendingIntentMapping(event);
-                    PendingIntent pi = this.scheduleProfileChange(event);
-                    epim.setPiStart(pi);
-                    scheduledTasks.add(epim);
+                    if(event.getAvailability() == CalendarContract.Events.AVAILABILITY_BUSY) {
+                        EventPendingIntentMapping epim = new EventPendingIntentMapping(event);
+                        PendingIntent pi = scheduleProfileChange(event);
+                        epim.setPiStart(pi);
+                        scheduledTasks.add(epim);
+                    }
 
                 }
             } else {
@@ -99,17 +104,24 @@ public class SchedulerService extends IntentService {
                         //On ajoute les événements qui ne sont pas présents dans les tâches planifiées
 
                         if (!event.equals(epim.getEvent())) {
-                            PendingIntent pi = scheduleProfileChange(event);
-                            scheduledTasks.add(counterScheduledTasks, new EventPendingIntentMapping(event, pi));
+
+                            //On ne planifie l'événement que si sa disponibilité est occupée
+                            if(event.getAvailability() == CalendarContract.Events.AVAILABILITY_BUSY) {
+                                PendingIntent pi = scheduleProfileChange(event);
+                                scheduledTasks.add(counterScheduledTasks, new EventPendingIntentMapping(event, pi));
+                            } else {
+                                counterScheduledTasks--;
+                            }
 
                             // Si le taskScheduled à une date de début inférieure à l'event en cours, c'est qu'il a été supprimé
+                            // Si l'id du taskScheduled est le même que l'event checker, mais que les deux events sont différents, il faut supprimer celui qui est plannifié.
 
-                            if (event.getDtStart() > epim.getEvent().getDtStart()) {
+                            if (event.getDtStart() > epim.getEvent().getDtStart() || event.getId() == epim.getEvent().getId()) {
                                 cancelProfileChange(epim);
                                 scheduledTasks.remove(epim);
                             }
                         }
-                    } else {
+                    } else if(event.getAvailability() == CalendarContract.Events.AVAILABILITY_BUSY) {
                         PendingIntent pi = scheduleProfileChange(event);
                         scheduledTasks.add(new EventPendingIntentMapping(event, pi));
                     }
@@ -126,7 +138,7 @@ public class SchedulerService extends IntentService {
 
             }
         } else {
-            if(scheduledTasks != null && scheduledTasks.size() > 0) {
+            if(scheduledTasks != null) {
                 for (EventPendingIntentMapping epim : scheduledTasks) {
                     cancelProfileChange(epim);
                 }

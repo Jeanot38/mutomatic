@@ -88,20 +88,17 @@ public class CalendarWrapper {
      * Allow to get the list of all events from a certain list of Calendars defined in Google Calendar application,
      * for one day beggining at day parameter.
      *
-     * @param day Represents the beginning time of the day.
+     * @param now Represents the beginning time of the day.
      * @param calendarIdToSelect The Ids of the Calendars from which events will be returned.
      * @return The list of events after selecting them thanks to the parameters.
      */
 
-    public LinkedList <Event> getEvents(Long day, Integer[] calendarIdToSelect) {
+    public LinkedList <Event> getEvents(Long now, Integer[] calendarIdToSelect) {
 
         events = new LinkedList<>();
         java.util.Calendar calendarLib = java.util.Calendar.getInstance();
-
-        calendarLib.setTimeInMillis(day);
-        calendarLib.add(java.util.Calendar.DATE, 1);
-        calendarLib.set(calendarLib.get(java.util.Calendar.YEAR), calendarLib.get(java.util.Calendar.MONTH), calendarLib.get(java.util.Calendar.DAY_OF_MONTH), 0, 0);
-        Long nextDay = calendarLib.getTimeInMillis();
+        Long nextDay = null;
+        Long beginningOfDay = null;
 
         // The cursor used to get results from the Google Calendar database
         Cursor cur;
@@ -119,20 +116,38 @@ public class CalendarWrapper {
         ArrayList<String> argumentsCalendar;
 
         // In the case of providing the day parameter...
-        if (day != null) {
+        if (now != null) {
+
+            //Initialize beginningDay parameter which represent today at midnight
+            calendarLib.setTimeInMillis(now);
+            calendarLib.set(calendarLib.get(java.util.Calendar.YEAR), calendarLib.get(java.util.Calendar.MONTH), calendarLib.get(java.util.Calendar.DAY_OF_MONTH), 0, 0);
+            beginningOfDay = calendarLib.getTimeInMillis();
+
+            //Initialize nextDay parameter which represent the next day at midnight
+            calendarLib.setTimeInMillis(now);
+            calendarLib.add(java.util.Calendar.DATE, 1);
+            calendarLib.set(calendarLib.get(java.util.Calendar.YEAR), calendarLib.get(java.util.Calendar.MONTH), calendarLib.get(java.util.Calendar.DAY_OF_MONTH), 0, 0);
+            nextDay = calendarLib.getTimeInMillis();
+
             // ... add a WHERE condition
-            selection = "((" + Events.DTEND + " >= ?) AND (" + Events.DTEND + " < ?)) ";
-            arguments = new String[] {Long.toString(day), Long.toString(nextDay)};
+            selection = "((" + Events.ALL_DAY + " = 0 AND " + Events.DTEND + " >= ? AND " + Events.DTEND + " < ?) OR (" + Events.ALL_DAY + " = 1 AND " + Events.DTSTART + " >= ? AND " + Events.DTSTART + " < ?)) ";
+            String beginningOfDayString = Long.toString(beginningOfDay);
+            String nowString = Long.toString(now);
+            String nextDayString = Long.toString(nextDay);
+
+            arguments = new String[] {nowString, nextDayString, beginningOfDayString, nextDayString};
         }
         // In the case of providing calendarIdToSelect array
         if(calendarIdToSelect != null) {
             argumentsCalendar = new ArrayList<>();
 
             // Add the two first arguments corresponding to day parameter...
-            if(day != null) {
+            if(now != null) {
                 selection += "AND (";
                 argumentsCalendar.add(arguments[0]);
                 argumentsCalendar.add(arguments[1]);
+                argumentsCalendar.add(arguments[2]);
+                argumentsCalendar.add(arguments[3]);
             }
 
             // ... and the add a condition for each id of calendar provided
@@ -146,7 +161,7 @@ public class CalendarWrapper {
             selection = selection.substring(0, selection.length()-4);
 
             // Convert the list to an array used by the query method above
-            if(day != null) {
+            if(now != null) {
                 selection += ")";
             }
 
@@ -158,7 +173,7 @@ public class CalendarWrapper {
 
         // Create Event objects and add to the list
         while(cur.moveToNext()) {
-            events.add(new Event(cur.getInt(Event.ID_INDEX), cur.getLong(Event.DTSTART_INDEX), cur.getLong(Event.DTEND_INDEX), cur.getString(Event.TITLE_INDEX), cur.getString(Event.DESCRIPTION_INDEX), cur.getInt(Event.AVAILABILITY_INDEX), cur.getInt(Event.CALENDAR_ID_INDEX), cur.getInt(Event.CALENDAR_COLOR_INDEX)));
+            events.add(new Event(cur.getInt(Event.ID_INDEX), cur.getLong(Event.DTSTART_INDEX), cur.getLong(Event.DTEND_INDEX), cur.getInt(Event.ALL_DAY_INDEX), cur.getString(Event.TITLE_INDEX), cur.getString(Event.DESCRIPTION_INDEX), cur.getInt(Event.AVAILABILITY_INDEX), cur.getInt(Event.CALENDAR_ID_INDEX), cur.getInt(Event.CALENDAR_COLOR_INDEX)));
         }
 
         cur.close();
