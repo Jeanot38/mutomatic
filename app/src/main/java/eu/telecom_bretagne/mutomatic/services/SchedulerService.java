@@ -5,23 +5,21 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.CalendarContract;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.telecom_bretagne.mutomatic.MainActivity;
-import eu.telecom_bretagne.mutomatic.receivers.AudioReceiver;
 import eu.telecom_bretagne.mutomatic.lib.Calendar;
 import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
 import eu.telecom_bretagne.mutomatic.lib.Event;
 import eu.telecom_bretagne.mutomatic.lib.EventPendingIntentMapping;
 import eu.telecom_bretagne.mutomatic.lib.Parameters;
+import eu.telecom_bretagne.mutomatic.receivers.AudioReceiver;
 
 /**
  * Created by math on 21/01/15.
@@ -80,6 +78,8 @@ public class SchedulerService extends IntentService {
             if (scheduledTasks == null) {
 
                 scheduledTasks = new CopyOnWriteArrayList<>();
+
+                LinkedList<Event> events = calendarWrapper.getEvents(today.getTime(), calendarsToUseArray);
 
                 for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUseArray)) {
                     if(event.getAvailability() == CalendarContract.Events.AVAILABILITY_BUSY) {

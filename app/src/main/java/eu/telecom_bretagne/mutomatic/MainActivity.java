@@ -142,7 +142,12 @@ public class MainActivity extends Activity {
                     eventName.setLayoutParams(paramEventName);
 
                     TextView eventInfo = new TextView(getApplicationContext());
-                    eventInfo.setText(time.format(hD) + " - " + time.format(hF));
+
+                    if(task.getEvent().getAllDay() == 1) {
+                        eventInfo.setText("Toute la journée");
+                    } else {
+                        eventInfo.setText(time.format(hD) + " - " + time.format(hF));
+                    }
                     eventInfo.setTextColor(Color.WHITE);
                     eventInfo.setLayoutParams(paramEventInfo);
 
