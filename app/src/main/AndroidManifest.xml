@@ -2,11 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="eu.telecom_bretagne.mutomatic" >
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -16,10 +19,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UIActivity" />
         <activity android:name=".SettingsActivity"/>
-        <receiver android:name=".lib.AudioReceiver"/>
+
+        <receiver android:name=".receivers.ServiceBootStartupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.AudioReceiver"/>
+
         <service
-            android:name=".service.SchedulerService"/>
+            android:name=".services.SchedulerService"/>
     </application>
 </manifest>

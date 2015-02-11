@@ -89,6 +89,29 @@
         />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="203dp"
+            android:layout_height="wrap_content"
+            android:text="Mettre à jour les evénements toutes les"
+            android:textSize="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="0.09" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerServiceInterval"
+            android:layout_marginTop="40dp"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/textCalendarChoice"
         android:layout_width="wrap_content"
