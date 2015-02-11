@@ -2,17 +2,17 @@ package eu.telecom_bretagne.mutomatic;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.LinkedList;
 
@@ -74,37 +74,64 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        LinkedList<Calendar> calendars;
+        LinearLayout layoutScrollCalendar = (LinearLayout)findViewById(R.id.layoutScrollCalendar);
+        LinkedList<Calendar> calendars = new LinkedList<>();
         CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
         calendars= calendarWrapper.getCalendars();
-        for (Calendar calendar : calendars){
-            String calendarName = calendar.getName();
-            CheckBox calendarCheckbox = new CheckBox(getApplicationContext());
-            calendarCheckbox.setText(calendarName);
+
+        final LinkedList <Integer> checkBoxIds = new LinkedList();
+
+        if(calendars.size() == 0) {
+            TextView eventInfo = new TextView(getApplicationContext());
+            eventInfo.setText("Aucun calendrier n'a été trouvé.");
+            eventInfo.setTextColor(Color.BLACK);
+
+            LinearLayout displayEvent=new LinearLayout(getApplicationContext());
+            displayEvent.addView(eventInfo);
+
+            layoutScrollCalendar.addView(displayEvent);
+
+        } else {
+            for (final Calendar calendar : calendars) {
+                String calendarName = calendar.getName();
+                CheckBox calendarCheckbox = new CheckBox(getApplicationContext());
+                calendarCheckbox.setText(calendarName);
+                calendarCheckbox.setTextColor(Color.BLACK);
+                ///////////////////////// EN TRAVAUX ////////////////////////////////////////
+                /*if (Parameters.getBooleanPreference(Parameters.CALENDAR_SELECTED)==true){
+                    calendarCheckbox.setChecked(true);
+                }*/
+                /////////////////////////////////////////////////////////////////////////////
+
+                checkBoxIds.add(new Integer(calendarCheckbox.getId()));
+
+                LinearLayout displayCalendar = new LinearLayout(getApplicationContext());
+                displayCalendar.setOrientation(LinearLayout.VERTICAL);
+
+                displayCalendar.addView(calendarCheckbox);
+                layoutScrollCalendar.addView(displayCalendar);
+
+
+                calendarCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        LinkedList<Integer> calendarSelected = new LinkedList();
+                        for (final Integer checkBoxId : checkBoxIds) {
+                            if (isChecked == true) {
+                            calendarSelected.add(new Integer(buttonView.getId()));
+                            }
+                        }
+                    }
+                });
+            }
+
+            for (Calendar calendar : calendars){
+                String calendarName = calendar.getName();
+                CheckBox calendarCheckbox = new CheckBox(getApplicationContext());
+                calendarCheckbox.setText(calendarName);
+            }
+
         }
-
-        Spinner spinnerServiceInterval = (Spinner) findViewById(R.id.spinnerServiceInterval);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, SpinnerServiceIntervalMapping.getSpinnerDescriptions());
-
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerServiceInterval.setAdapter(spinnerAdapter);
-        spinnerServiceInterval.setSelection(SpinnerServiceIntervalMapping.getDefaultSpinnerPosition());
-
-        spinnerServiceInterval.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Integer parameterValue = SpinnerServiceIntervalMapping.getSpinnerValuesFromDescription((String) parent.getItemAtPosition(position));
-                if(parameterValue != null) {
-                    Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, parameterValue);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
     }
 
     private static class SpinnerServiceIntervalMapping {
@@ -122,14 +149,14 @@ public class SettingsActivity extends Activity {
 
         public static Integer getSpinnerValuesFromDescription(String spinnerValue) {
             Integer indexOfSpinner = null;
-            for(int i=0 ; i < spinnerDescriptions.length ; i++) {
-                if(spinnerDescriptions[i].equals(spinnerValue)) {
+            for (int i = 0; i < spinnerDescriptions.length; i++) {
+                if (spinnerDescriptions[i].equals(spinnerValue)) {
                     indexOfSpinner = i;
                     break;
                 }
             }
 
-            if(indexOfSpinner != null) {
+            if (indexOfSpinner != null) {
                 return spinnerValues[indexOfSpinner];
             }
 
@@ -140,7 +167,7 @@ public class SettingsActivity extends Activity {
 
             Integer serviceIntervalParameter = Parameters.getIntPreference(Parameters.SCHEDULING_INTERVAL);
 
-            if(serviceIntervalParameter != null) {
+            if (serviceIntervalParameter != null) {
                 for (int i = 0; i < spinnerValues.length; i++) {
                     if (spinnerValues[i].equals(serviceIntervalParameter)) {
                         return i;
@@ -151,6 +178,5 @@ public class SettingsActivity extends Activity {
             return -1;
         }
     }
-
 
 }
