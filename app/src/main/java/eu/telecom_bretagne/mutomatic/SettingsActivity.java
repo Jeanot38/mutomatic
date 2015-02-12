@@ -6,11 +6,14 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -131,6 +134,27 @@ public class SettingsActivity extends Activity {
                 calendarCheckbox.setText(calendarName);
             }
 
+            Spinner spinnerServiceInterval = (Spinner) findViewById(R.id.spinnerServiceInterval);
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, SpinnerServiceIntervalMapping.getSpinnerDescriptions());
+
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerServiceInterval.setAdapter(spinnerAdapter);
+            spinnerServiceInterval.setSelection(SpinnerServiceIntervalMapping.getDefaultSpinnerPosition());
+
+                spinnerServiceInterval.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Integer parameterValue = SpinnerServiceIntervalMapping.getSpinnerValuesFromDescription((String) parent.getItemAtPosition(position));
+                    if(parameterValue != null) {
+                        Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, parameterValue);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
     }
 
@@ -177,6 +201,8 @@ public class SettingsActivity extends Activity {
 
             return -1;
         }
+
+
     }
 
 }
