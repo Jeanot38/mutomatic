@@ -16,6 +16,7 @@ public abstract class Parameters {
     public static final String APPLICATION_ENABLED = "eu.telecom_bretagne.mutomatic.application_enabled";
     public static final String SCHEDULING_INTERVAL = "eu.telecom_bretagne.mutomatic.scheduling_interval";
     public static final String PROFILE_SELECTED = "eu.telecom_bretagne.mutomatic.profile_selected";
+    public static final String CALENDAR_SELECTED = "eu.telecom_bretagne.mutomatic.calendar_selected";
 
 
     private static SharedPreferences sharedPreferences;
@@ -120,7 +121,7 @@ public abstract class Parameters {
         return null;
     }
 
-    public static Boolean setPreference(String key, Integer [] values) {
+    public static Boolean setPreference(String key, Set <Integer> values) {
 
         if(sharedPreferences != null) {
             HashSet<String> listOfValues = new HashSet<>();

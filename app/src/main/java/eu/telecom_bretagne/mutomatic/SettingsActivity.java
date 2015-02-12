@@ -17,7 +17,9 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import eu.telecom_bretagne.mutomatic.lib.Calendar;
 import eu.telecom_bretagne.mutomatic.lib.CalendarWrapper;
@@ -95,16 +97,19 @@ public class SettingsActivity extends Activity {
             layoutScrollCalendar.addView(displayEvent);
 
         } else {
-            for (final Calendar calendar : calendars) {
+
+            Set <Integer> idCalendarsSelected = Parameters.getIntPreferenceSet(Parameters.CALENDAR_SELECTED);
+
+            for (Calendar calendar : calendars) {
                 String calendarName = calendar.getName();
                 CheckBox calendarCheckbox = new CheckBox(getApplicationContext());
                 calendarCheckbox.setText(calendarName);
                 calendarCheckbox.setTextColor(Color.BLACK);
-                ///////////////////////// EN TRAVAUX ////////////////////////////////////////
-                /*if (Parameters.getBooleanPreference(Parameters.CALENDAR_SELECTED)==true){
+                calendarCheckbox.setId(calendar.hashCode());
+
+                if (idCalendarsSelected.contains(calendar.getId())){
                     calendarCheckbox.setChecked(true);
-                }*/
-                /////////////////////////////////////////////////////////////////////////////
+                }
 
                 checkBoxIds.add(new Integer(calendarCheckbox.getId()));
 
@@ -118,11 +123,31 @@ public class SettingsActivity extends Activity {
                 calendarCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        LinkedList<Integer> calendarSelected = new LinkedList();
-                        for (final Integer checkBoxId : checkBoxIds) {
-                            if (isChecked == true) {
-                            calendarSelected.add(new Integer(buttonView.getId()));
+
+                        HashSet<Integer> calendarSelected = new HashSet<Integer>();
+                        CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
+                        LinkedList<Calendar> calendars = calendarWrapper.getCalendars();
+
+                        for (Calendar calendar : calendars) {
+                            CheckBox checkbox = (CheckBox) findViewById(calendar.hashCode());
+
+                            if (checkbox.isChecked()) {
+                                calendarSelected.add(calendar.getId());
                             }
+                        }
+
+                        if(Parameters.getIntPreferenceSet(Parameters.CALENDAR_SELECTED).size() == 0 && calendarSelected.size() > 0) {
+                            Intent broadcastIntent = new Intent();
+                            broadcastIntent.setAction(MainActivity.ResponseReceiver.END_SCHEDULER_PROCESS);
+                            sendBroadcast(broadcastIntent);
+                        }
+
+                        Parameters.setPreference(Parameters.CALENDAR_SELECTED,calendarSelected);
+
+                        if(calendarSelected.size() == 0) {
+                            Intent broadcastIntent = new Intent();
+                            broadcastIntent.setAction(MainActivity.ResponseReceiver.END_SCHEDULER_PROCESS);
+                            sendBroadcast(broadcastIntent);
                         }
                     }
                 });

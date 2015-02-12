@@ -18,7 +18,9 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.telecom_bretagne.mutomatic.lib.Calendar;
@@ -39,20 +41,20 @@ public class MainActivity extends Activity {
 
         Parameters.configurePreferences(getApplicationContext());
 
-        /*LinearLayout layoutScrollCalendar = (LinearLayout)findViewById(R.id.layoutScrollCalendar);
-        LinkedList<Calendar> calendars = new LinkedList<>();
+        LinearLayout layoutScrollCalendar = (LinearLayout)findViewById(R.id.layoutScrollCalendar);
+        LinkedList<Calendar> calendars;
         CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
-        calendars= calendarWrapper.getCalendars();
-        final LinkedList <Integer> calendarIds = new LinkedList();
-        for (final Calendar calendar : calendars) {
+        calendars = calendarWrapper.getCalendars();
+        HashSet <Integer> calendarIds = new HashSet<> ();
+        for ( Calendar calendar : calendars) {
             String calendarName = calendar.getName();
-            calendarIds.add(new Integer(calendar.getId()));
-        }*/
+            calendarIds.add(calendar.getId());
+        }
 
         if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == null) Parameters.setPreference(Parameters.APPLICATION_ENABLED, true);
         if(Parameters.getIntPreference(Parameters.SCHEDULING_INTERVAL) == null) Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 60);
         if(Parameters.getIntPreference(Parameters.PROFILE_SELECTED) == null) Parameters.setPreference(Parameters.PROFILE_SELECTED, AudioManager.RINGER_MODE_SILENT);
-        //if(Parameters.getIntPreference(Parameters.CALENDAR_SELECTED) == null) Parameters.setPreference(Parameters.CALENDAR_SELECTED, calendarIds);
+        if(Parameters.getIntPreferenceSet(Parameters.CALENDAR_SELECTED) == null) Parameters.setPreference(Parameters.CALENDAR_SELECTED, calendarIds);
 
 
         IntentFilter filter = new IntentFilter(ResponseReceiver.END_SCHEDULER_PROCESS);
@@ -126,6 +128,15 @@ public class MainActivity extends Activity {
             if(tasks == null) {
                 TextView eventInfo = new TextView(getApplicationContext());
                 eventInfo.setText("Le service est désactivé.");
+                eventInfo.setTextColor(Color.BLACK);
+
+                LinearLayout displayEvent=new LinearLayout(getApplicationContext());
+                displayEvent.addView(eventInfo);
+
+                layoutScroll.addView(displayEvent);
+            } else if(Parameters.getIntPreferenceSet(Parameters.CALENDAR_SELECTED).size() == 0) {
+                TextView eventInfo = new TextView(getApplicationContext());
+                eventInfo.setText("Aucun calendrier n'est sélectionné.");
                 eventInfo.setTextColor(Color.BLACK);
 
                 LinearLayout displayEvent=new LinearLayout(getApplicationContext());

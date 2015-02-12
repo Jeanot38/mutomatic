@@ -8,6 +8,7 @@ import android.provider.CalendarContract.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * This class provides simple methods to get a list of Calendars and events created in Google Calendar application.
@@ -20,8 +21,8 @@ public class CalendarWrapper {
      */
 
     private ContentResolver contentResolver;
-    private LinkedList <Calendar> calendars = null;
-    private LinkedList <Event> events = null;
+    //private LinkedList <Calendar> calendars = null;
+    //private LinkedList <Event> events = null;
 
     /**
      * Create an {@link CalendarWrapper} object and set the {@link ContentResolver} object as attribut of the object.
@@ -39,7 +40,7 @@ public class CalendarWrapper {
 
     public LinkedList <Calendar> getCalendars() {
 
-        calendars = new LinkedList<>();
+        LinkedList<Calendar> calendars = new LinkedList<>();
 
         // The cursor used to get results from the Google Calendar database
         Cursor cur;
@@ -93,9 +94,9 @@ public class CalendarWrapper {
      * @return The list of events after selecting them thanks to the parameters.
      */
 
-    public LinkedList <Event> getEvents(Long now, Integer[] calendarIdToSelect) {
+    public LinkedList <Event> getEvents(Long now, Set<Integer> calendarIdToSelect) {
 
-        events = new LinkedList<>();
+        LinkedList<Event> events = new LinkedList<>();
         java.util.Calendar calendarLib = java.util.Calendar.getInstance();
         Long nextDay = null;
         Long beginningOfDay = null;
@@ -114,6 +115,10 @@ public class CalendarWrapper {
 
         //Only used if the id list of Calendars is provide. Required for dynamic values of calendarIdToSelect
         ArrayList<String> argumentsCalendar;
+
+        if(calendarIdToSelect.size() == 0) {
+            return events;
+        }
 
         // In the case of providing the day parameter...
         if (now != null) {

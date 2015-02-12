@@ -2,6 +2,9 @@ package eu.telecom_bretagne.mutomatic.lib;
 
 import android.provider.CalendarContract;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Created by math on 22/01/15.
  */
@@ -38,5 +41,18 @@ public class Calendar {
 
     public int calendarColor() {
         return calendarColor;
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 0;
+        hashCode += this.id;
+
+        if(name != null) {
+            hashCode += name.hashCode();
+        }
+
+        hashCode += calendarColor;
+        return Math.abs(hashCode);
     }
 }
