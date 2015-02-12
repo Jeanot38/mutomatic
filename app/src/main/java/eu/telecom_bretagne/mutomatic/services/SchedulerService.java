@@ -11,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import eu.telecom_bretagne.mutomatic.MainActivity;
@@ -59,19 +60,7 @@ public class SchedulerService extends IntentService {
             Date today = new Date();
             CalendarWrapper calendarWrapper = new CalendarWrapper(getContentResolver());
 
-            //TODO Take care of this part when options will be develop
-
-            ArrayList<Integer> calendarToUse = new ArrayList<>();
-            Integer [] calendarsToUseArray;
-
-            for(Calendar calendar : calendarWrapper.getCalendars()) {
-                if(calendar.getName() != null && ! calendar.getName().equals("Jours fériés en France") && ! calendar.getName().equals("Numéros de semaine") && ! calendar.getName().equals("Anniversaires")) {
-                    calendarToUse.add(calendar.getId());
-                }
-            }
-
-            calendarsToUseArray = new Integer[calendarToUse.size()];
-            calendarToUse.toArray(calendarsToUseArray);
+            Set<Integer> calendarsToUse = Parameters.getIntPreferenceSet(Parameters.CALENDAR_SELECTED);
 
             //When service is called for the first time
 
@@ -79,9 +68,7 @@ public class SchedulerService extends IntentService {
 
                 scheduledTasks = new CopyOnWriteArrayList<>();
 
-                LinkedList<Event> events = calendarWrapper.getEvents(today.getTime(), calendarsToUseArray);
-
-                for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUseArray)) {
+                for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUse)) {
                     if(event.getAvailability() == CalendarContract.Events.AVAILABILITY_BUSY) {
                         EventPendingIntentMapping epim = new EventPendingIntentMapping(event);
                         PendingIntent pi = scheduleProfileChange(event);
@@ -94,7 +81,7 @@ public class SchedulerService extends IntentService {
                 int counterScheduledTasks = 0;
 
                 // On parcourt l'ensemble des événements du calendrier pour que les tâches planifiées associées soient crées et qu'on supprime celles dont les événements ont été supprimées
-                for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUseArray)) {
+                for (Event event : calendarWrapper.getEvents(today.getTime(), calendarsToUse)) {
 
                     // Pour éviter les IndexOutOfBoundException et permet de repérer la fin de la liste scheduledTasks. Le else représente la fin de la liste, on ajoute donc tous les événements restants
                     if (counterScheduledTasks < scheduledTasks.size()) {
