@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
         }
 
         if(Parameters.getBooleanPreference(Parameters.APPLICATION_ENABLED) == null) Parameters.setPreference(Parameters.APPLICATION_ENABLED, true);
-        if(Parameters.getIntPreference(Parameters.SCHEDULING_INTERVAL) == null) Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 60);
+        if(Parameters.getIntPreference(Parameters.SCHEDULING_INTERVAL) == null) Parameters.setPreference(Parameters.SCHEDULING_INTERVAL, 900);
         if(Parameters.getIntPreference(Parameters.PROFILE_SELECTED) == null) Parameters.setPreference(Parameters.PROFILE_SELECTED, AudioManager.RINGER_MODE_SILENT);
         if(Parameters.getIntPreferenceSet(Parameters.CALENDAR_SELECTED) == null) Parameters.setPreference(Parameters.CALENDAR_SELECTED, calendarIds);
 
